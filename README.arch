@@ -1,0 +1,112 @@
+
+                      Linmodem architecture
+
+                  Copyright (c) 2000 Fabrice Bellard
+
+
+1) Overview:
+-----------
+
+The hardware dependent layer (for example lmreal.c, lmsim.c,
+lmsoundcard.c) must call the function
+
+void sm_process(struct sm_state *sm, s16 *output, s16 *input, int nb_samples);
+
+at least every 10 ms. It must supply 'nb_samples' 16 bit input samples
+at 8000 Hz. The function sm_process returns the 'output' samples it
+has computed. These samples can them be sent to the phone line.
+
+'sm_process' handles the dialing, ring detection and Vxx protocol
+initization. Then, each protocol can supply a similar function. For
+example, 'v8.c' supplies the function:
+
+int V8_process(V8State *sm, s16 *output, s16 *input, int nb_samples);
+
+It returns the modulation to which the modem must go after the V8
+phase.
+
+Note that no threads are used. It implies that each 'xx_process'
+function must use an internal state machine. The first parameter
+('V8State' here) is usually the structure in which the state is
+stored.
+
+2) Timing:
+---------
+
+The protocols must use only 'nb_samples' as a timing, not the real
+time of the system. It allows to simulate the whole modem without
+changing anything.
+
+
+3) Reentrancy:
+-------------
+
+Each protocol must be reentrant, so that multiple modems can be
+instanciated at the same time. It is needed for example to do
+simulations.
+
+4) Data handling:
+----------------
+
+When a protocol gets a bit from the input samples, it should can a function 
+
+int get_bit(void *opaque);
+
+provided at its initialization with the opaque parameter 'opaque'. The
+same should be done for output with :
+
+void put_bit(void *opaque, int bit);
+
+'sm_process' instanciate each protocol by giving it one of its
+standard bit I/O functions. These functions are responsible from
+handling the higher level protocol (asynchronous, LAPM, V42bis).
+
+See the file 'serial.c' to see how the data can be handled. V42/V42bis
+should be added the same way.
+
+The decoded bytes are put in the FIFO sm->rx_fifo. This fifo is then
+return to the modem tty. The inverse is done with sm->tx_fifo.
+
+5) Modem configuration:
+----------------------
+
+The configuration parameters are defined in 'lm.c'. See 'struct
+LinModemConfig default_lm_config'.
+
+6) Linmodem harware interface:
+-----------------------------
+
+See the file lmsoundcard.c which gives an example to interface to a
+sound card with the Open Sound System API. 
+
+7) Linmodem kernel interface:
+----------------------------
+
+The hardware interface to an actual modem is not completely defined
+yet. However, it will be very close to the Open Sound System API:
+
+- the write() & read() syscalls write & read 16 bit samples from the
+modem.
+
+- An ioctl can select the sampling rate (at least 8000 Hz must be
+available). 
+
+- an ioctl set/reset the offhook relay.
+
+- an ioctl set/reset the pulse relay.
+
+- an ioctl gives the state of the ring detection. Each time the ring
+  rings, the event POLLPRI (urgent data) should be set so that the
+  poll() syscall can handle it.
+
+- an ioctl changes the input & output gains, as the volume for a sound
+  card.
+
+8) AT command parser:
+--------------------
+
+See the file atparse.c: The parser must remain sample. We do not want
+to support all the AT commands, but only the minimal subset so that
+linux programs can work : 'chat' for PPP, 'mgetty/vgetty' for
+voice/data/fax calls, 'sendfax' to send faxes.
+

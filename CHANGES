@@ -1,0 +1,33 @@
+* from version 0.2.4 to 0.2.5
+=============================
+- major rewrite, the API becomes stable.
+- V8/V21/V23 should be usable.
+- added X11 interface for the simulator. 
+- better line model for the simulator: generic FIR filter. 
+  Programmable echo generator (both neat & far end).
+- V22 tx code (needed for V34 phase 2).
+- V34: added adaptive equalizer, symbol timing recovery, phase
+  recovery. Tests for fast training on the PP sequence (but not satisfactory).
+- added AT parser.
+- added serial protocol.
+- added working soundcard hw support.
+
+* from version 0.2.3 to 0.2.4
+=============================
+
+- major V90 update, the algebraic part is finished, and the CP packet
+  parsing is done.
+- added patches from Pavel (serial.c, lmreal.c)
+
+* from version 0.2.2 to 0.2.3
+=============================
+
+- added V90 core, but no usable code yet.
+- more patches from pavel for ltmodem.
+
+* from version 0.2.1 to 0.2.2
+=============================
+
+- added extended V34 modulation for 31200 & 33600 speeds.
+- added V34 negociation (not finished)
+- added Pavel patches for ltmodem

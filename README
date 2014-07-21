@@ -1,0 +1,99 @@
+
+Here is the generic Linux Modem. This modem is totally software,
+it means that all the DSP stuff is done by the main CPU, as in some so
+called "winmodems". See the main project page at
+http://www.enst.fr/~bellard/linmodem.html. 
+
+Linmodem is also a research project. It contains all the necessary
+stuff to test new digital communication algorithms. The line simulator
+and the X11 interface can be used to simulate a complete communication
+chain.
+
+Linmodem is the first modem to integrate a graphical user interface
+which show the data transmitted graphically (QAM constellation, real
+time FFT of the received signal, etc...) and which will allow you to
+monitor the line quality.
+
+What's done:
+-----------
+
+- V34 modulator (sampling rate of 8000 Hz)
+- V34 demodulator (sampling rate of 8000 Hz), but no echo cancellor.
+- Algebraic part of V90.
+- DTMF dialing/receive.
+- V8 protocol.
+- V21 modulation & demodulation
+- V23 modulation & demodulation
+- sample code to test the protocol.
+- sample code to test V21, V22, V23, V34 and V90 independently from the modem.
+- a basic phone line simulator (with echos & typical line
+  amplitude/phase distortion).
+- an X11 interface (see README.x11)
+- soundcard interface.
+- AT command parser & sample tty simulator.
+- asynchronous protocol.
+
+See the homepage of the project at
+http://www.enst.fr/~bellard/linmodem.html to know what are the tasks
+you could do.
+
+Read the file README.arch to know the details of the
+implementation. Next versions will contain the first draft on the
+algorithms which are implemented.
+
+Testing:
+-------
+
+Yes, you can already hear the modem !
+
+compile everything, then type: 
+
+lm -sv
+
+You will see a lot of debug stuff. Then you can press Control C to
+stop the call. If you play the files 'ans.sw' and 'cal.sw' on your
+soundcard (16 bit, signed 8kHz), you will hear the DTMF pulses, the V8
+negociation, and a sample V21 connection. The X11 interface allows you
+to see the signals exchanged.
+
+Data pump testing:
+-----------------
+
+With the option '-m modulation_name', you can test the V21, V22, V23,
+V34 and V90 data pumps.  You can understand what's going on in this
+test only if you have a basic knowledge of the modulations.
+
+The X11 interface can be used to monitor all the main data pump
+parameters, except for V90 which is not yet completely integrated in
+the tests (see README.x11).
+
+Real modems:
+-----------
+
+Linmodem won't contain any
+hardware modem to support modems directly, but it will use kernel
+drivers which give a unified API to every driver (see README.arch to
+have an idea of the API)
+
+Some test code is included in lmreal.c to work with the LTModem stuff
+available at http://www.close.u-net.com/ltmodem.html. However, it was
+not tested so don't expect it to work in this version.
+
+Soundcard testing:
+-----------------
+
+If you have two PCs connected by soundcards (connect line in -> line
+out), you may try the soundcard support of linmodem (not tested now,
+but should work):
+
+'lm -tv' launches linmodem on your soundcard (device '/dev/dsp'). Then
+you can type 'ATDTxxx' to compose a number and launch a connection. On
+the other PC, type 'ATA' to receive the connection. It should work in
+V23 (or V21 if you change the defaults modulations in lm.c).
+
+With 'lm -t', linmodem simulates a serial line on '/dev/ttyz0'. You
+can use minicom or any other terminal emulator to send AT commands.
+
+Enjoy :-)
+
+Fabrice Bellard - bellard@email.enst.fr - http://www.enst.fr/~bellard

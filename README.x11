@@ -1,0 +1,32 @@
+
+Linmodem contains an X11 interface which can be used to monitor the
+modem parameters. It is used for example in v34 testing (lm -m v34). The
+X11 simulation works only in 16 bit mode. If you are interested by
+other screen depths, please implement them :-)
+
+The function keys are used to change the parameters which are dumped
+on the screen:
+
+* for V34:
+
+F1 : dump the brut samples which enter into the modem (at 8000Hz). A
+hamming windowed FFT is done to output the spectral power.
+
+F2 : dump the echo cancellor parameters (not implemented yet).
+
+F3 : dump the samples after frequency normalization & symbol timing
+recovery. You have 3 samples per baud for V34. A hamming windowed FFT
+is done to output the spectral power.
+
+F4 : dump the equalizer filter in both time & frequency domains.
+
+F5 : dump the QAM points just after the equalizer and phase
+recovery. This graphic can be used to monitor the overall modem
+quality.
+
+
+* for V21/V23 tests
+
+F1: same as V34
+
+F3: decision samples
