@@ -20,16 +20,16 @@ endif
 all: $(PROG) 
 
 $(PROG): $(OBJS)
-	gcc $(LDFLAGS) -o $(PROG) $(OBJS) -lm
+	gcc -o $(PROG) $(OBJS) -lm $(LDFLAGS)
 
 v34gen: v34gen.o dsp.o
-	gcc $(LDFLAGS) -o $@ v34gen.o dsp.o -lm
+	gcc -o $@ v34gen.o dsp.o -lm $(LDFLAGS)
 
 v34table.c: v34gen
 	./v34gen > $@
 
 v90gen: v90gen.o
-	gcc $(LDFLAGS) -o $@ $< -lm
+	gcc -o $@ $< -lm $(LDFLAGS)
 
 v90table.c: v90gen
 	./v90gen > $@
