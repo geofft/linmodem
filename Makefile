@@ -1,5 +1,5 @@
 # uncomment to use X11 debug interface
-USE_X11=y
+#USE_X11=y
 
 CFLAGS= -O2 -Wall -g
 LDFLAGS= -g
