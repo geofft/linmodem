@@ -1,6 +1,4 @@
 *.o
 lm
 v34gen
-v34table.c
 v90gen
-v90table.c

@@ -40,7 +40,7 @@ linmodem.dvi: linmodem.tex
 	latex2e linmodem.tex
 
 clean:
-	rm -f *.o *~ *.dat core gmon.out *.sw v34table.c v90table.c $(PROG) v34gen v90gen *.aux *.dvi *.log
+	rm -f *.o *~ *.dat core gmon.out *.sw $(PROG) v34gen v90gen *.aux *.dvi *.log
 
 tar:
 	( cd .. ; tar zcvf linmodem.tgz linmodem --exclude CVS )
