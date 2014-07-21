@@ -15,6 +15,8 @@ PROG= lm
 ifdef USE_X11
 OBJS += display.o
 LDFLAGS += -L/usr/X11R6/lib -lX11
+else
+OBJS += nodisplay.o
 endif
 
 all: $(PROG) 
