@@ -1,4 +1,7 @@
 /* sample interface code to use a linux soundcard */
+#define _XOPEN_SOURCE
+#include <stdlib.h>
+#include <sys/select.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
@@ -14,9 +17,6 @@
 #define NB_SAMPLES ((1 << FRAGMENT_BITS)/2)
 
 /* default pty */
-#define PTY_NAME "z0"
-char *pty_name = "/dev/pty" PTY_NAME;
-char *tty_name = "/dev/tty" PTY_NAME;
 
 extern struct sm_hw_info sm_hw_soundcard;
 
@@ -33,12 +33,14 @@ void soundcard_modem(void)
     int out_buf_flushed, i, len;
     
     if (!lm_debug) {
-        printf("linmodem tty is '%s'\n", tty_name);
-        tty_handle = open(pty_name, O_RDWR);
+        tty_handle = open("/dev/ptmx", O_RDWR);
         if (tty_handle < 0) {
-            perror(pty_name);
+            perror("/dev/ptmx");
             return;
         }
+        grantpt(tty_handle);
+        unlockpt(tty_handle);
+        printf("linmodem tty is '%s'\n", ptsname(tty_handle));
     } else {
         printf("linmodem tty is stdout\n");
         tty_handle = 0;
