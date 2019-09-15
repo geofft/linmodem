@@ -586,7 +586,8 @@ static void v90_send_CP(V90DecodeState *s, int is_CP, int ack)
     put_bits(&p, 16, crc);
 
     put_bits(&p, 3, 0); /* fill */
-    printf("CP size= %d\n", p - buf);
+    int cp_size = p - buf;
+    printf("CP size= %d\n", cp_size);
 }
 
 static int get_bit(u8 **pp)
