@@ -38,8 +38,14 @@ void soundcard_modem(void)
             perror("/dev/ptmx");
             return;
         }
-        grantpt(tty_handle);
-        unlockpt(tty_handle);
+        if (grantpt(tty_handle) < 0) {
+            perror("grantpt");
+            return;
+        }
+        if (unlockpt(tty_handle) < 0) {
+            perror("unlockpt");
+            return;
+        }
         printf("linmodem tty is '%s'\n", ptsname(tty_handle));
     } else {
         printf("linmodem tty is stdout\n");
