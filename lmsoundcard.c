@@ -1,5 +1,6 @@
 /* sample interface code to use a linux soundcard */
 #define _XOPEN_SOURCE
+#define _XOPEN_SOURCE_EXTENDED
 #include <stdlib.h>
 #include <sys/select.h>
 #include <unistd.h>
